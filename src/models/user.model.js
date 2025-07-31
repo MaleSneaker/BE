@@ -28,6 +28,14 @@ const userSchema = new mongoose.Schema(
       enum: ["User", "admin"],
       default: "User",
     },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
+    activeToken: {
+      type: String,
+      default: "",
+    },
   },
   {
     versionKey: false,

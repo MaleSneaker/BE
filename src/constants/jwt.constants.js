@@ -1,4 +1,6 @@
 export const JWT = {
   SERECT: "PHUCNT",
-  EXPIRED: "1d"
+  EXPIRED: "1d",
+  ACTIVE_SECRET: "XACTHUCTAIKHOAN",
+  ACTIVE_EXPIRED: "5m",
 };
