@@ -2,6 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 const productvariantSchema = new Schema(
   {
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product", 
+      required: true,
+    },
     color: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Color",

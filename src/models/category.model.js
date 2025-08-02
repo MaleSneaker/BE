@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 
 const categorySchema = new Schema(
   {
@@ -8,6 +8,6 @@ const categorySchema = new Schema(
   { timestamps: true, versionKey: false }
 );
 
-const Category = mongoose.model("Category", categorySchema);
+const Category = model("Category", categorySchema);
 
 export default Category;
