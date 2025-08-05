@@ -13,8 +13,14 @@ export const registerService = async (req, res, next) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
   req.body.password = hashedPassword;
-  const newUser = await User.create(req.body);
-  const activeToken = jwt.sign(newUser._id, JWT.ACTIVE_SECRET, {
+  const newUser = new User(req.body);
+  const payload = {
+    _id: newUser._id,
+    email: newUser.email,
+    role: newUser,
+  };
+
+  const activeToken = jwt.sign(payload, JWT.ACTIVE_SECRET, {
     expiresIn: JWT.ACTIVE_EXPIRED,
   });
   newUser.activeToken = activeToken;
