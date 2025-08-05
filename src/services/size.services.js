@@ -6,7 +6,7 @@ import createResponse from "../utils/response.js";
 export const createSizeService = async (req, res, next) => {
   const existingSize = await Size.findOne({ name: req.body.name });
   if (existingSize) {
-    next(createError(400, "Kích cỡ đã tồn tại"));
+    return next(createError(400, "Kích cỡ đã tồn tại"));
   }
   const newSize = await Size.create({ ...req.body });
   return res
@@ -25,11 +25,11 @@ export const getAllSizeService = async (req, res, next) => {
 export const getDetailSizeService = async (req, res, next) => {
   const { id } = req.params;
   if (!id) {
-    next(createError(400, "Chưa gửi lên id để tìm chi tiết kích cỡ"));
+    return next(createError(400, "Chưa gửi lên id để tìm chi tiết kích cỡ"));
   }
   const size = await Size.findById(id);
   if (!size) {
-    next(createError(400, `Không tìm thấy kích cỡ với id: ${id}`));
+    return next(createError(400, `Không tìm thấy kích cỡ với id: ${id}`));
   }
   return res
     .status(200)
@@ -39,11 +39,11 @@ export const getDetailSizeService = async (req, res, next) => {
 export const updateSizeService = async (req, res, next) => {
   const { id } = req.params;
   if (!id) {
-    next(createError(400, "Chưa gửi lên id để tìm chi tiết màu sắc"));
+    return next(createError(400, "Chưa gửi lên id để tìm chi tiết màu sắc"));
   }
   const size = await Size.findById(id);
   if (!size) {
-    next(createError(400, `Không tìm thấy sản phẩm với id: ${id}`));
+    return next(createError(400, `Không tìm thấy sản phẩm với id: ${id}`));
   }
   const existingSize = await Size.findOne({
     _id: { $ne: id },

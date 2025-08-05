@@ -8,7 +8,7 @@ export const createColorService = async (req, res, next) => {
     $or: [{ name: req.body.name }, { hex: req.body.name }],
   });
   if (existingColor) {
-    next(createError(400, "Màu này đã tồn tại"));
+    return next(createError(400, "Màu này đã tồn tại"));
   }
   const newColor = await Color.create({ ...req.body });
   return res
@@ -29,11 +29,11 @@ export const getAllColorService = async (req, res, next) => {
 export const getDetailColorService = async (req, res, next) => {
   const { id } = req.params;
   if (!id) {
-    next(createError(400, "Chưa gửi lên id để tìm chi tiết màu sắc"));
+    return next(createError(400, "Chưa gửi lên id để tìm chi tiết màu sắc"));
   }
   const color = await Color.findById(id);
   if (!color) {
-    next(createError(400, `Không tìm thấy sản phẩm với id: ${id}`));
+    return next(createError(400, `Không tìm thấy sản phẩm với id: ${id}`));
   }
   return res
     .status(200)
@@ -43,11 +43,11 @@ export const getDetailColorService = async (req, res, next) => {
 export const updatedColorService = async (req, res, next) => {
   const { id } = req.params;
   if (!id) {
-    next(createError(400, "Chưa gửi lên id để tìm chi tiết màu sắc"));
+    return next(createError(400, "Chưa gửi lên id để tìm chi tiết màu sắc"));
   }
   const color = await Color.findById(id);
   if (!color) {
-    next(createError(400, `Không tìm thấy sản phẩm với id: ${id}`));
+    return next(createError(400, `Không tìm thấy sản phẩm với id: ${id}`));
   }
   const existingColor = await Color.findOne({
     _id: { $ne: id },

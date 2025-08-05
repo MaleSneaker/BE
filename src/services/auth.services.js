@@ -8,7 +8,7 @@ import { JWT } from "../constants/jwt.constants.js";
 export const registerService = async (req, res, next) => {
   const foundUser = await User.findOne({ email: req.body.email });
   if (foundUser) {
-    next(createError(400, "Người dùng này đã tồn tại"));
+    return next(createError(400, "Người dùng này đã tồn tại"));
   }
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
