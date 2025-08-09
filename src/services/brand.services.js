@@ -19,6 +19,13 @@ export const updateBrandService = async (req, res, next) => {
   if (!id) {
     return next(createError(400, `Chưa gửi lên ${id}`));
   }
+  const existingBrand = await Brand.findOne({
+    _id: { $ne: id },
+    name: req.body.name,
+  });
+  if (existingBrand) {
+    return next(createError(400, "Đã tồn tại thương hiệu này."));
+  }
   const foundBrand = await Brand.findByIdAndUpdate(
     id,
     { ...req.body },

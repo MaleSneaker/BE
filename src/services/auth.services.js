@@ -16,10 +16,9 @@ export const registerService = async (req, res, next) => {
   const newUser = new User(req.body);
   const payload = {
     _id: newUser._id,
-    email: newUser.email,
-    role: newUser,
+    emaiL: newUser.email,
+    role: newUser.role,
   };
-
   const activeToken = jwt.sign(payload, JWT.ACTIVE_SECRET, {
     expiresIn: JWT.ACTIVE_EXPIRED,
   });
@@ -36,12 +35,10 @@ export const loginService = async (req, res, next) => {
   if (!foundUser) {
     return next(createError(400, "Thông tin đăng nhập không đúng"));
   }
-
   const comparePassword = await bcrypt.compare(password, foundUser.password);
   if (!comparePassword) {
     return next(createError(400, "Thông tin đăng nhập không đúng"));
   }
-
   if (!foundUser.isActive) {
     return next(createError(403, "Người dùng chưa được kích hoạt tài khoản"));
   }
