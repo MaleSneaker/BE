@@ -5,7 +5,26 @@ const productSchema = new Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
-    thumbnall: { type: String },
+    thumbnall: { type: String, required: true },
+    images: {
+      type: [String],
+      required: true,
+      max: 5,
+    },
+    price: {
+      type: Number,
+      min: 1000,
+      required: true,
+    },
+    stock: {
+      type: Number,
+      default: 1,
+    },
+    sizes: {
+      type: [string],
+      enum: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"],
+      required: true,
+    },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
@@ -16,10 +35,7 @@ const productSchema = new Schema(
       ref: "Brand",
       required: true,
     },
-    variantsld: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "ProductVariant" },
-    ],
-    rating: { type: Number },
+
     isDeleted: {
       type: Boolean,
       default: false,
