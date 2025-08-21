@@ -20,8 +20,12 @@ const productSchema = new Schema(
       type: Number,
       default: 1,
     },
+    sold: {
+      type: Number,
+      default: 0,
+    },
     sizes: {
-      type: [string],
+      type: [String],
       enum: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"],
       required: true,
     },
