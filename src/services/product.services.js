@@ -68,7 +68,7 @@ export const createProductService = async (req, res, next) => {
   }
   const sizes = [];
   for (let i = 0; i < req.body.sizes.length; i++) {
-    if (sizes.includes(req.body.sizes[i])) {
+    if (sizes.some((s) => s.value === req.body.sizes[i].value)) {
       throw createError(400, "Kích cỡ không được trùng nhau!");
     }
     sizes.push(req.body.sizes[i]);
@@ -92,7 +92,7 @@ export const updateProductService = async (req, res, next) => {
   }
   const sizes = [];
   for (let i = 0; i < req.body.sizes.length; i++) {
-    if (sizes.includes(req.body.sizes[i])) {
+    if (sizes.some((s) => s.value === req.body.sizes[i].value)) {
       throw createError(400, "Kích cỡ không được trùng nhau!");
     }
     sizes.push(req.body.sizes[i]);
