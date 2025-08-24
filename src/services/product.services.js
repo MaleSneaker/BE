@@ -108,23 +108,29 @@ export const updateProductService = async (req, res, next) => {
     .json(createResponse(true, 200, "Cập nhật thành công", updatedProduct));
 };
 
-export const deleteProductService = async (req, res, next) => {
+export const updateStatusProductService = async (req, res, next) => {
   const { id } = req.params;
+  const { status } = req.body;
   if (!id) {
     throw createError(400, "Chưa có id sản phẩm");
   }
   const findDeletedProduct = await Product.findOne({
     _id: id,
-    isDeleted: false,
+    isDeleted: !status,
   });
   if (!findDeletedProduct) {
-    throw createError(400, "Sản phẩm này đã bị xoá trước đó");
+    throw createError(400, "Không tìm thấy sản phẩm");
   }
-  findDeletedProduct.isDeleted = true;
+  findDeletedProduct.isDeleted = status;
   await findDeletedProduct.save();
   return res
     .status(200)
     .json(
-      createResponse(true, 200, "Xoá sản phẩm thành công", findDeletedProduct)
+      createResponse(
+        true,
+        200,
+        status ? "ẨN sản phẩm thành công" : "Hiển thị sản phẩm thành công ",
+        findDeletedProduct
+      )
     );
 };

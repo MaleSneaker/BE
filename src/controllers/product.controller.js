@@ -1,9 +1,9 @@
 import {
   createProductService,
-  deleteProductService,
   getAllProductsService,
   getDetailProductService,
   updateProductService,
+  updateStatusProductService
 } from "../services/product.services.js";
 import handleASync from "../utils/handleAsync.js";
 
@@ -27,6 +27,6 @@ export const updatedProduct = handleASync(async (req, res, next) => {
   return await updateProductService(req, res, next);
 });
 
-export const deleteProduct = handleASync(async (req, res, next) => {
-  return await deleteProductService(req, res, next);
+export const updateStatusProduct = handleASync(async (req, res, next) => {
+  return await updateStatusProductService(req, res, next);
 });
