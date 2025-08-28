@@ -12,7 +12,7 @@ export const uploadImage = handleASync(async (req, res, next) => {
   const { downloadUrl } = await uploadSingleFile(file);
   return res
     .status(200)
-    .json(createResponse(downloadUrl, "Upload thành công", true, 200));
+    .json(createResponse(true, 200, "Upload thành công", downloadUrl));
 });
 
 export const uploadImages = handleASync(async (req, res, next) => {
@@ -27,5 +27,5 @@ export const uploadImages = handleASync(async (req, res, next) => {
   }
   return res
     .status(200)
-    .json(createResponse(images, "Upload thành công", true, 200));
+    .json(createResponse(true, 200, "Upload thành công", images));
 });
