@@ -49,6 +49,7 @@ export const loginService = async (req, res, next) => {
   };
   const accessToken = jwt.sign(payload, JWT.SERECT, { expiresIn: JWT.EXPIRED });
   foundUser.password = undefined;
+  foundUser.blocked = undefined;
   return res.status(200).json(
     createResponse(true, 200, "Đăng nhập thành công", {
       foundUser,
