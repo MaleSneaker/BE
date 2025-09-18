@@ -18,11 +18,8 @@ export const authMiddleware = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, JWT.SERECT);
     const user = await User.findById(decoded._id).select(
-      "role blocked.isBlocked isActive"
+      "role blocked.isBlocked"
     );
-    if (!user.isActive) {
-      return next(createError(401, "Tài khoản của bạn chưa kích hoạt"));
-    }
     if (!user || user.blocked.isBlocked) {
       return next(createError(401, "Tài khoản không tồn tại hoặc đã bị xoá"));
     }
