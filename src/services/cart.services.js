@@ -50,7 +50,6 @@ export const addToCartServices = async (req, res, next) => {
     await Cart.create({ userId, items: [] });
   }
   let updatedCart = null;
-  // Nếu có sản phẩm trong giỏ hàng rồi thì tăng số lượng của sản phẩm đó lên
   if (currentCart && currentCart.items.length > 0) {
     const productInCart = currentCart.items.find(
       (item) =>
@@ -101,4 +100,64 @@ export const addToCartServices = async (req, res, next) => {
   return res
     .status(200)
     .json(createResponse(true, 200, "Thêm giỏ hàng thành công", updatedCart));
+};
+
+export const updateQuantityCartServices = async (req, res, next) => {
+  const userId = req.user._id;
+  let { size: sizeRequest, productId: productRequest, quantity } = req.body;
+  const foundCart = await Cart.findOne({
+    userId,
+    "items.product": productRequest,
+    "items.size.value": sizeRequest,
+  }).populate({
+    path: "items.product",
+  });
+
+  if (!foundCart) {
+    throw createError(400, "Không tìm thấy sản phẩm này trong giỏ hàng");
+  }
+  const foundItem = foundCart.items.find(
+    (item) => item.product._id.toString() === productRequest
+  );
+  const foundSize = foundItem.product.sizes.find(
+    (item) => item.value === sizeRequest
+  );
+  if (quantity < 1) {
+    quantity = 1;
+  }
+  if (quantity > foundSize.stock) {
+    quantity = foundSize.stock;
+  }
+  foundItem.quantity = quantity;
+  await foundCart.save();
+  return res
+    .status(200)
+    .json(createResponse(true, 200, "Cập nhật giỏ hàng thành công", foundCart));
+};
+
+
+export const deleteFromCartServices = async (req, res, next) => {
+  const userId = req.user._id;
+  const { productId, size } = req.body;
+  if (!productId || !size) {
+    throw createError(400, "Thiếu thông tin sản phẩm hoặc kích cỡ cần xóa");
+  }
+  const cart = await Cart.findOne({ userId });
+  if (!cart) {
+    throw createError(404, "Không tìm thấy giỏ hàng");
+  }
+  const initialLength = cart.items.length;
+  cart.items = cart.items.filter(
+    (item) =>
+      item.product.toString() !== productId ||
+      item.size.value.toLowerCase() !== size.toLowerCase()
+  );
+  if (cart.items.length === initialLength) {
+    throw createError(404, "Không tìm thấy sản phẩm trong giỏ hàng");
+  }
+  await cart.save();
+
+  return res.status(200).json(
+    createResponse(true, 200, "Xóa sản phẩm khỏi giỏ hàng thành công", cart)
+  );
 };
