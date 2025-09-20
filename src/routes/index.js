@@ -5,6 +5,7 @@ import categoryRouter from "./category.routes.js";
 import uploadRoute from "./upload.routes.js";
 import productRoute from "./product.routes.js";
 import cartRoute from "./cart.routes.js";
+import orderRoute from "./order.routes.js";
 
 const router = Router();
 
@@ -14,4 +15,5 @@ router.use("/brands", brandRouter);
 router.use("/upload", uploadRoute);
 router.use("/products", productRoute);
 router.use("/cart", cartRoute);
+router.use("/order", orderRoute);
 export default router;
