@@ -1,9 +1,19 @@
 import {
   createOrderService,
+  getAllOrderService,
   getDetailMyOrderService,
+  getDetailOrderService,
   getMyOrderService,
 } from "../services/order.services.js";
 import handleASync from "../utils/handleAsync.js";
+
+export const getAllOrder = handleASync(async (req, res, next) => {
+  return await getAllOrderService(req, res, next);
+});
+
+export const getDetailOrder = handleASync(async (req, res, next) => {
+  return await getDetailOrderService(req, res, next);
+});
 
 export const getMyOrder = handleASync(async (req, res, next) => {
   return await getMyOrderService(req, res, next);

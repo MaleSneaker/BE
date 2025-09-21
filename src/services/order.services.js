@@ -29,6 +29,22 @@ export const createOrderService = async (req, res, next) => {
     .json(createResponse(true, 201, "Đặt hàng thành công", order));
 };
 
+export const getAllOrderService = async (req, res, next) => {
+  const { filter, options } = buildQuery(req.query);
+  const orders = await Order.paginate(filter, options);
+  return res
+    .status(200)
+    .json(createResponse(true, 200, "Lấy danh sách thành công", orders));
+};
+
+export const getDetailOrderService = async (req, res, next) => {
+  const { id } = req.params;
+  const order = await Order.findById(id);
+  return res
+    .status(200)
+    .json(createResponse(true, 200, "Lấy chi tiết đơn hàng thành công", order));
+};
+
 export const getMyOrderService = async (req, res, next) => {
   const { filter, options } = buildQuery(req.query);
   const userId = req.user._id;
