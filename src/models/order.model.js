@@ -79,6 +79,10 @@ const orderSchema = new mongoose.Schema(
       by: String,
       description: String,
     },
+    feeShipping: {
+      type: Number,
+      default: 30000
+    },
     status: {
       type: String,
       enum: [

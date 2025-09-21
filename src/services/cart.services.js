@@ -11,17 +11,31 @@ export const getAllCartServices = async (req, res, next) => {
   });
 
   findCart.items.forEach((item) => {
-    if (item.product.stock < item.quantity) {
-      item.product.stock = item.quantity;
+    const foundSize = item.product.sizes.find(
+      (SizeItem) => SizeItem.value === item.size.value
+    );
+    if (foundSize.stock < item.quantity && !!foundSize.stock) {
+      item.quantity = foundSize.stock;
     }
   });
 
   await Promise.all(
-    findCart.items.map(async (item) => {
-      const product = await Product.findById(item.product);
-      if (!product.sizes.includes(item.size.value)) {
-        item.size.isAvailable = false;
+    findCart.items.map(async (cartItem) => {
+      const product = await Product.findById(cartItem.product);
+
+      if (!product) {
+        cartItem.size.isAvailable = false;
+        return;
       }
+      const matchedSize = product.sizes.find(
+        (sizeObj) => sizeObj.value === cartItem.size.value
+      );
+
+      if (!matchedSize || matchedSize.stock === 0) {
+        cartItem.size.isAvailable = false;
+        return;
+      }
+      cartItem.size.isAvailable = true;
     })
   );
 
