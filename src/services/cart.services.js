@@ -57,7 +57,17 @@ export const addToCartServices = async (req, res, next) => {
         item.size.value.toLowerCase() === req.body.size.toLowerCase()
     );
     const currentQuantity = productInCart?.quantity || 0;
+    const sizeInProduct = productInCart?.product?.sizes?.find(
+      (item) => item.value.toLowerCase() === req.body.size.toLowerCase()
+    );
     let newQuantity = currentQuantity + req.body.quantity;
+    if (sizeInProduct?.stock < newQuantity) {
+      throw createError(
+        400,
+        `Số lượng tồn kho chỉ còn ${sizeInProduct?.stock}. Trong giỏ hàng đã có ${productInCart.quantity} sản phẩm. Không thể thêm vượt quá số lượng tồn.`
+      );
+    }
+
     updatedCart = await Cart.findOneAndUpdate(
       {
         userId,
@@ -135,7 +145,6 @@ export const updateQuantityCartServices = async (req, res, next) => {
     .json(createResponse(true, 200, "Cập nhật giỏ hàng thành công", foundCart));
 };
 
-
 export const deleteFromCartServices = async (req, res, next) => {
   const userId = req.user._id;
   const { productId, size } = req.body;
@@ -157,7 +166,9 @@ export const deleteFromCartServices = async (req, res, next) => {
   }
   await cart.save();
 
-  return res.status(200).json(
-    createResponse(true, 200, "Xóa sản phẩm khỏi giỏ hàng thành công", cart)
-  );
+  return res
+    .status(200)
+    .json(
+      createResponse(true, 200, "Xóa sản phẩm khỏi giỏ hàng thành công", cart)
+    );
 };
