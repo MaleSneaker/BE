@@ -4,6 +4,7 @@ import createResponse from "../utils/response.js";
 import User from "../models/user.model.js";
 import createError from "../utils/errorHandle.js";
 import { updateInventoryStockCreateOrder } from "./inventory.services.js";
+import Cart from "../models/cart.model.js";
 
 export const createOrderService = async (req, res, next) => {
   const { items } = req.body;
@@ -23,7 +24,17 @@ export const createOrderService = async (req, res, next) => {
     phone: user.phone,
   };
   await updateInventoryStockCreateOrder(items);
-  const order = await Order.create({ ...req.body, items, customerInfo });
+  await Cart.findOneAndUpdate(
+    { userId },
+    { $set: { items: [] } },
+    { new: true }
+  );
+  const order = await Order.create({
+    ...req.body,
+    userId,
+    items,
+    customerInfo,
+  });
   return res
     .status(201)
     .json(createResponse(true, 201, "Đặt hàng thành công", order));

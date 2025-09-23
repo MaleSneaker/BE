@@ -81,7 +81,16 @@ const orderSchema = new mongoose.Schema(
     },
     feeShipping: {
       type: Number,
-      default: 30000
+      default: 30000,
+    },
+    paymentMethod: {
+      type: String,
+      enum: ["cod", "online"],
+      default: "cod",
+    },
+    isPaid: {
+      type: Boolean,
+      default: false,
     },
     status: {
       type: String,
