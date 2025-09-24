@@ -50,6 +50,16 @@ function buildQuery(query) {
       filter[field][`$${operator}`] = value.includes(",")
         ? value.split(",")
         : value;
+    } else if (key.includes(".")) {
+      const [arrayField, nestedField] = key.split(".");
+
+      if (!filter[arrayField]) {
+        filter[arrayField] = { $elemMatch: {} };
+      }
+
+      filter[arrayField].$elemMatch[nestedField] = value.includes(",")
+        ? { $in: value.split(",") }
+        : value;
     } else if (typeof value === "string" && value.includes(",")) {
       filter[key] = { $in: value.split(",") };
     } else {
