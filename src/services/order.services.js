@@ -42,6 +42,9 @@ export const createOrderService = async (req, res, next) => {
 
 export const getAllOrderService = async (req, res, next) => {
   const { filter, options } = buildQuery(req.query);
+  options.populate = {
+    path: "items.productId",
+  };
   const orders = await Order.paginate(filter, options);
   return res
     .status(200)
@@ -50,7 +53,9 @@ export const getAllOrderService = async (req, res, next) => {
 
 export const getDetailOrderService = async (req, res, next) => {
   const { id } = req.params;
-  const order = await Order.findById(id);
+  const order = await Order.findById(id).populate({
+    path: "items.productId",
+  });
   return res
     .status(200)
     .json(createResponse(true, 200, "Lấy chi tiết đơn hàng thành công", order));
@@ -59,6 +64,10 @@ export const getDetailOrderService = async (req, res, next) => {
 export const getMyOrderService = async (req, res, next) => {
   const { filter, options } = buildQuery(req.query);
   const userId = req.user._id;
+  options.populate = {
+    path: "items.productId",
+    select: "thumbnail",
+  };
   const orders = await Order.paginate({ userId, ...filter }, options);
   return res
     .status(200)
@@ -68,7 +77,9 @@ export const getMyOrderService = async (req, res, next) => {
 export const getDetailMyOrderService = async (req, res, next) => {
   const { id } = req.params;
   const userId = req.user._id;
-  const order = await Order.findOne({ _id: id, userId });
+  const order = await Order.findOne({ _id: id, userId }).populate({
+    path: "items.productId",
+  });
   return res
     .status(200)
     .json(createResponse(true, 200, "Lấy chi tiết đơn hàng thành công", order));

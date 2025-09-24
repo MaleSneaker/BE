@@ -57,6 +57,9 @@ const orderSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    orderCode: {
+      type: Number,
+    },
     customerInfo: userSchema,
     receiverInfo: userSchema,
     address: {
