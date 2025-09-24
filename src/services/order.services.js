@@ -73,3 +73,40 @@ export const getDetailMyOrderService = async (req, res, next) => {
     .status(200)
     .json(createResponse(true, 200, "Lấy chi tiết đơn hàng thành công", order));
 };
+
+export const updateStatusOrderService = async (req, res, next) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const order = await Order.findOne({
+    _id: id,
+    status: { $ne: status },
+  });
+  if (!order) {
+    throw createError(400, "Đơn hàng không tồn tại!");
+  }
+  if (status === "done") {
+    order.isPaid = true;
+  }
+  order.status = status;
+  await order.save();
+  return res
+    .status(200)
+    .json(createResponse(true, 200, "Cập nhật trạng thái thành công", order));
+};
+
+export const cancelOrderService = async (req, res, next) => {
+  const { id } = req.params;
+  const order = await Order.findOne({
+    _id: id,
+    status: { $nin: ["done", "cancelled"] },
+  });
+  if (!order) {
+    throw createError(400, "Đơn hàng không tồn tại!");
+  }
+  order.canceled.by = req.body.by;
+  order.canceled.description = req.body.description;
+  await order.save();
+  return res
+    .status(200)
+    .json(createResponse(true, 200, "Hủy đơn hàng thành công", order));
+};
