@@ -1,4 +1,8 @@
 import {
+  createPaymentLinkService,
+  returnPaymentLinkService,
+} from "../services/checkout.services.js";
+import {
   cancelOrderService,
   createOrderService,
   getAllOrderService,
@@ -35,4 +39,12 @@ export const updateStatusOrder = handleASync(async (req, res, next) => {
 
 export const cancelOrder = handleASync(async (req, res, next) => {
   return await cancelOrderService(req, res, next);
+});
+
+export const createPaymentLink = handleASync(async (req, res, next) => {
+  return await createPaymentLinkService(req, res, next);
+});
+
+export const returnPaymentLink = handleASync(async (req, res, next) => {
+  return await returnPaymentLinkService(req, res, next);
 });
