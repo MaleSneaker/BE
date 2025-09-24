@@ -116,6 +116,7 @@ export const cancelOrderService = async (req, res, next) => {
   }
   order.canceled.by = req.body.by;
   order.canceled.description = req.body.description;
+  order.status = "cancelled";
   await order.save();
   return res
     .status(200)
